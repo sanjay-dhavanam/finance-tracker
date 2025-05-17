@@ -34,7 +34,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatCurrency, formatDate, apiRequest, queryClient } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Transaction } from "@shared/schema";
 import { 

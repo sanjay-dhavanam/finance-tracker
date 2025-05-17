@@ -85,7 +85,7 @@
 }
 
 .sidebar-link.active {
-  @apply bg-primary bg-opacity-10 text-primary border-l-3 border-primary;
+  @apply bg-primary bg-opacity-10 text-primary border-l-2 border-primary;
 }
 
 .chart-container {
