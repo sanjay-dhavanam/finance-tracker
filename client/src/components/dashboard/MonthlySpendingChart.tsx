@@ -103,7 +103,7 @@ export default function MonthlySpendingChart() {
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold text-neutral-800">Monthly Spending</CardTitle>
         <div className="flex space-x-2">
-          <Button size="sm" variant="default" className="px-3 py-1 text-xs font-medium bg-primary bg-opacity-10 text-primary">Monthly</Button>
+          <Button size="sm" variant="ghost" className="px-3 py-1 text-xs font-medium text-primary bg-primary/10 hover:bg-primary/20">Monthly</Button>
           <Button size="sm" variant="ghost" className="px-3 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100">Quarterly</Button>
           <Button size="sm" variant="ghost" className="px-3 py-1 text-xs font-medium text-neutral-600 hover:bg-neutral-100">Yearly</Button>
         </div>
