@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
 
 const BudgetSchema = new mongoose.Schema({
+  amount: {
+    type: String,
+    required: true
+  },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
     required: true
   },
-  amount: {
-    type: String,
-    required: true
-  },
   period: {
     type: String,
-    enum: ['monthly', 'quarterly', 'yearly'],
-    required: true
+    required: true,
+    enum: ['weekly', 'monthly', 'yearly']
   },
   startDate: {
     type: Date,
-    required: true
+    required: true,
+    default: Date.now
   },
   endDate: {
     type: Date,

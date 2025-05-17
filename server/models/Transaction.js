@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 
 const TransactionSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    required: true,
+    enum: ['income', 'expense']
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
   description: {
     type: String,
     required: true
@@ -9,18 +19,9 @@ const TransactionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
-    type: Date,
-    required: true
-  },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-    required: true
-  },
-  type: {
-    type: String,
-    enum: ['income', 'expense'],
     required: true
   },
   notes: {

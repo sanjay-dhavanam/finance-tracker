@@ -5,11 +5,11 @@ const CategorySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  icon: {
+  color: {
     type: String,
     required: true
   },
-  color: {
+  icon: {
     type: String,
     required: true
   },
