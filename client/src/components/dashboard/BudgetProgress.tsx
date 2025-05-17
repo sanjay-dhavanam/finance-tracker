@@ -47,7 +47,7 @@ export default function BudgetProgress() {
   }, [summaryData]);
   
   // Get warnings from budgets
-  const warnings = React.useMemo(() => {
+  const warnings = useMemo(() => {
     if (!data || !Array.isArray(data)) return [];
     
     return data
