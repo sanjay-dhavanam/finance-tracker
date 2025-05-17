@@ -43,7 +43,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
       description: "",
       amount: "",
       date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
-      categoryId: "",
+      categoryId: "1", // Default to the first category
       type: "expense",
       notes: "",
     },
@@ -126,10 +126,16 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   
   // Form submission handler
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Make a copy of the values to avoid mutating the form state
+    const submissionValues = {
+      ...values,
+      categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId
+    };
+    
     if (isEditing) {
-      updateMutation.mutate(values);
+      updateMutation.mutate(submissionValues);
     } else {
-      createMutation.mutate(values);
+      createMutation.mutate(submissionValues);
     }
   }
 

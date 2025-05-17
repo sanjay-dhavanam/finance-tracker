@@ -318,7 +318,7 @@ export default function TransactionList({ transactions: propTransactions, isLoad
               defaultValues={{
                 description: editingTransaction.description,
                 amount: editingTransaction.amount.toString(),
-                date: new Date(editingTransaction.date),
+                date: new Date(editingTransaction.date).toISOString().slice(0, 10),
                 categoryId: editingTransaction.categoryId,
                 type: editingTransaction.type as "income" | "expense",
                 notes: editingTransaction.notes || "",
