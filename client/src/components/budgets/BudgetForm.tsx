@@ -51,7 +51,13 @@ export default function BudgetForm({ onSuccess, defaultValues, budgetId }: Budge
   // Create budget mutation
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await apiRequest('POST', '/api/budgets', values);
+      // Format dates properly for API
+      const formattedValues = {
+        ...values,
+        startDate: new Date(values.startDate).toISOString().split('T')[0],
+        endDate: values.endDate ? new Date(values.endDate).toISOString().split('T')[0] : null
+      };
+      const res = await apiRequest('POST', '/api/budgets', formattedValues);
       return res.json();
     },
     onSuccess: () => {
@@ -82,7 +88,13 @@ export default function BudgetForm({ onSuccess, defaultValues, budgetId }: Budge
   // Update budget mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await apiRequest('PUT', `/api/budgets/${budgetId}`, values);
+      // Format dates properly for API
+      const formattedValues = {
+        ...values,
+        startDate: new Date(values.startDate).toISOString().split('T')[0],
+        endDate: values.endDate ? new Date(values.endDate).toISOString().split('T')[0] : null
+      };
+      const res = await apiRequest('PUT', `/api/budgets/${budgetId}`, formattedValues);
       return res.json();
     },
     onSuccess: () => {

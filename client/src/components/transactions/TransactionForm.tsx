@@ -55,7 +55,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
       // Convert the form data to the format expected by the server
       const formattedValues = {
         ...values,
-        date: new Date(values.date).toISOString(),
+        date: new Date(values.date).toISOString().split('T')[0], // Format as YYYY-MM-DD
       };
       const res = await apiRequest('POST', '/api/transactions', formattedValues);
       return res.json();
@@ -94,7 +94,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
       // Convert the form data to the format expected by the server
       const formattedValues = {
         ...values,
-        date: new Date(values.date).toISOString(),
+        date: new Date(values.date).toISOString().split('T')[0], // Format as YYYY-MM-DD
       };
       const res = await apiRequest('PUT', `/api/transactions/${transactionId}`, formattedValues);
       return res.json();
