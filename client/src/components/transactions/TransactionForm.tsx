@@ -94,10 +94,11 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Update transaction mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Send the date value directly without transformation
+      // Format data properly for API update
       const formattedValues = {
         ...values,
-        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId
+        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId,
+        date: values.date instanceof Date ? values.date.toISOString() : new Date(values.date).toISOString(),
       };
       const res = await apiRequest('PUT', `/api/transactions/${transactionId}`, formattedValues);
       return res.json();

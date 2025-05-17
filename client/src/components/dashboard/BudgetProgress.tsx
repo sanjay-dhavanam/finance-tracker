@@ -1,3 +1,4 @@
+import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,7 @@ export default function BudgetProgress() {
   });
   
   // Calculate performance score if summary data is available
-  const performanceScore = React.useMemo(() => {
+  const performanceScore = useMemo(() => {
     if (!summaryData) return null;
     
     const totalBudget = parseFloat(summaryData.balance || "0");
