@@ -4,8 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { formatCurrency, getBudgetProgressClass } from "@/lib/utils";
-import { Home, Utensils, Car, Film, Zap, Tag } from "lucide-react";
+import { 
+  formatCurrency, 
+  getBudgetProgressClass, 
+  getBudgetWarningMessage,
+  calculatePerformanceScore 
+} from "@/lib/utils";
+import { Home, Utensils, Car, Film, Zap, Tag, AlertTriangle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface BudgetProgressItem {
   id: number;
@@ -22,6 +28,35 @@ export default function BudgetProgress() {
   const { data, isLoading } = useQuery<BudgetProgressItem[]>({
     queryKey: ["/api/analytics/budget-progress"],
   });
+
+  const { data: summaryData } = useQuery({
+    queryKey: ["/api/analytics/summary"],
+  });
+  
+  // Calculate performance score if summary data is available
+  const performanceScore = React.useMemo(() => {
+    if (!summaryData) return null;
+    
+    const totalBudget = parseFloat(summaryData.balance || "0");
+    const totalSpent = parseFloat(summaryData.expenses || "0");
+    const savingsTarget = totalBudget * 0.2; // Assuming 20% savings target
+    const actualSavings = parseFloat(summaryData.savings || "0");
+    
+    return calculatePerformanceScore(totalBudget, totalSpent, savingsTarget, actualSavings);
+  }, [summaryData]);
+  
+  // Get warnings from budgets
+  const warnings = React.useMemo(() => {
+    if (!data || !Array.isArray(data)) return [];
+    
+    return data
+      .map(budget => {
+        const percentage = parseFloat(budget.percentage);
+        const warningMessage = getBudgetWarningMessage(percentage, budget.categoryName);
+        return warningMessage ? { message: warningMessage, percentage, categoryName: budget.categoryName } : null;
+      })
+      .filter(warning => warning !== null);
+  }, [data]);
   
   const getIconForCategory = (icon: string) => {
     switch (icon) {
@@ -42,6 +77,52 @@ export default function BudgetProgress() {
           <a href="/budgets" className="text-primary text-sm font-medium">Manage</a>
         </Button>
       </CardHeader>
+      
+      {/* Performance Score */}
+      {performanceScore !== null && (
+        <div className="px-6 pt-6 pb-2">
+          <div className="p-4 bg-neutral-50 rounded-lg border border-neutral-100">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-sm font-medium text-neutral-800">Financial Health Score</h3>
+              <Badge variant={performanceScore > 70 ? "success" : performanceScore > 50 ? "warning" : "destructive"}>
+                {performanceScore}/100
+              </Badge>
+            </div>
+            <Progress 
+              value={performanceScore} 
+              className="h-2 bg-neutral-200"
+              indicatorClassName={
+                performanceScore > 70 ? "bg-success" : 
+                performanceScore > 50 ? "bg-warning" : 
+                "bg-destructive"
+              }
+            />
+            <p className="text-xs text-neutral-500 mt-2">
+              {performanceScore > 80 
+                ? "Excellent! You're managing your finances very well." 
+                : performanceScore > 70
+                ? "Good job! You're on track with your budget goals."
+                : performanceScore > 50
+                ? "You're making progress, but there's room for improvement."
+                : "Your spending needs attention. Consider reviewing your budget."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Budget Warnings */}
+      {warnings && warnings.length > 0 && (
+        <div className="px-6 pt-3 pb-0">
+          {warnings.map((warning, index) => (
+            <Alert key={index} variant="destructive" className="mb-3">
+              <AlertTriangle className="h-4 w-4 mr-2" />
+              <AlertDescription className="text-xs">
+                {warning.message}
+              </AlertDescription>
+            </Alert>
+          ))}
+        </div>
+      )}
       
       <CardContent className="p-6 space-y-6">
         {isLoading ? (
