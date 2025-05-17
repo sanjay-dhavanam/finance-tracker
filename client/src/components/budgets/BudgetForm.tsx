@@ -40,11 +40,11 @@ export default function BudgetForm({ onSuccess, defaultValues, budgetId }: Budge
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues || {
-      categoryId: "",
+      categoryId: 1,
       amount: "",
       period: "monthly",
-      startDate: new Date().toISOString().slice(0, 10),
-      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).toISOString().slice(0, 10),
+      startDate: new Date(),
+      endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
     },
   });
   

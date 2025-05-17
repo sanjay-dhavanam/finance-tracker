@@ -43,7 +43,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
       description: "",
       amount: "",
       date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
-      categoryId: "1", // Default to the first category
+      categoryId: 1, // Default to the first category
       type: "expense",
       notes: "",
     },
