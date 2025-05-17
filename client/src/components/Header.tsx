@@ -4,9 +4,41 @@ import { Input } from "@/components/ui/input";
 import { Search, Bell, Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TransactionForm from "@/components/transactions/TransactionForm";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 
 export default function Header() {
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [, setLocation] = useLocation();
+  
+  // Load transactions and budgets for search functionality
+  const { data: transactions } = useQuery({
+    queryKey: ["/api/transactions"],
+  });
+  
+  const { data: budgets } = useQuery({
+    queryKey: ["/api/budgets"],
+  });
+  
+  // Handle search
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    
+    if (query.trim().length > 0) {
+      // Navigate to appropriate page based on search results
+      if (transactions && Array.isArray(transactions) && transactions.some(t => 
+        t.description && t.description.toLowerCase().includes(query.toLowerCase())
+      )) {
+        setLocation("/transactions");
+      } else if (budgets && Array.isArray(budgets) && budgets.some(b => 
+        b.id && b.id.toString().includes(query)
+      )) {
+        setLocation("/budgets");
+      }
+    }
+  };
 
   return (
     <>
@@ -23,6 +55,8 @@ export default function Header() {
                     className="pl-10"
                     placeholder="Search transactions, budgets..." 
                     type="search"
+                    value={searchQuery}
+                    onChange={handleSearch}
                   />
                 </div>
               </div>

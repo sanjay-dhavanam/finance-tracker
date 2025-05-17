@@ -54,6 +54,47 @@ export function getBudgetProgressClass(percentage: number): string {
   }
 }
 
+// Get warning message for budget progress
+export function getBudgetWarningMessage(percentage: number, categoryName: string): string | null {
+  if (percentage >= 100) {
+    return `Budget for ${categoryName} has been exceeded!`;
+  } else if (percentage >= 90) {
+    return `Budget for ${categoryName} is almost depleted. Only ${100 - percentage}% remaining.`;
+  } else if (percentage >= 80) {
+    return `Warning: Budget for ${categoryName} is at ${percentage}% of limit.`;
+  }
+  return null;
+}
+
+// Calculate financial performance score (0-100)
+export function calculatePerformanceScore(
+  totalBudget: number, 
+  totalSpent: number, 
+  savingsTarget: number = 0, 
+  savingsActual: number = 0
+): number {
+  // Base score is how well you stayed within budget (max 70 points)
+  let budgetScore = 0;
+  if (totalBudget > 0) {
+    const budgetRatio = Math.min(totalSpent / totalBudget, 1.5);
+    if (budgetRatio <= 1) {
+      // Under budget: 70 points max
+      budgetScore = 70 * (1 - (budgetRatio * 0.3));
+    } else {
+      // Over budget: penalty
+      budgetScore = Math.max(0, 70 - (70 * ((budgetRatio - 1) * 2)));
+    }
+  }
+  
+  // Savings score (max 30 points)
+  let savingsScore = 0;
+  if (savingsTarget > 0) {
+    savingsScore = Math.min(30, 30 * (savingsActual / savingsTarget));
+  }
+  
+  return Math.round(budgetScore + savingsScore);
+}
+
 // Generate chart colors
 export function generateChartColors(count: number): string[] {
   const baseColors = [

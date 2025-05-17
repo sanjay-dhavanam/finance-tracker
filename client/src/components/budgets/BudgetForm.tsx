@@ -203,7 +203,7 @@ export default function BudgetForm({ onSuccess, defaultValues, budgetId }: Budge
               <FormControl>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span className="text-neutral-500 sm:text-sm">$</span>
+                    <span className="text-neutral-500 sm:text-sm">₹</span>
                   </div>
                   <Input className="pl-7" placeholder="0.00" {...field} />
                 </div>
