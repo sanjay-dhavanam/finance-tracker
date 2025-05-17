@@ -59,17 +59,17 @@ export default function Sidebar({ open, toggleSidebar }: SidebarProps) {
             {sidebarLinks.map((link) => (
               <li key={link.path}>
                 <Link href={link.path}>
-                  <a 
+                  <div 
                     className={cn(
                       "sidebar-link flex items-center px-4 py-3 text-sm font-medium rounded-md",
                       location === link.path 
-                        ? "active" 
+                        ? "bg-primary text-white" 
                         : "text-neutral-600 hover:bg-neutral-100"
                     )}
                   >
                     {link.icon}
                     {link.label}
-                  </a>
+                  </div>
                 </Link>
               </li>
             ))}
