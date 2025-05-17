@@ -30,7 +30,7 @@ export default function Sidebar({ open }: SidebarProps) {
   return (
     <aside 
       className={cn(
-        "sidebar bg-white w-64 fixed inset-y-0 left-0 z-20 transform transition-transform shadow-md lg:translate-x-0 lg:static lg:h-auto",
+        "sidebar bg-white w-64 transform transition-transform shadow-md h-auto",
         open ? "open" : ""
       )}
     >
