@@ -102,7 +102,17 @@ export class MemStorage implements IStorage {
 
   async createTransaction(insertTransaction: InsertTransaction): Promise<Transaction> {
     const id = this.currentTransactionId++;
-    const transaction: Transaction = { ...insertTransaction, id };
+    
+    // Ensure proper date handling for API
+    const transaction: Transaction = { 
+      ...insertTransaction, 
+      id,
+      date: typeof insertTransaction.date === 'string' 
+        ? new Date(insertTransaction.date) 
+        : insertTransaction.date,
+      notes: insertTransaction.notes || null
+    };
+    
     this.transactions.set(id, transaction);
     return transaction;
   }
@@ -111,7 +121,18 @@ export class MemStorage implements IStorage {
     const transaction = this.transactions.get(id);
     if (!transaction) return undefined;
     
-    const updatedTransaction = { ...transaction, ...updateData };
+    // Handle dates properly
+    const processedUpdateData = {...updateData};
+    if (updateData.date && typeof updateData.date === 'string') {
+      processedUpdateData.date = new Date(updateData.date);
+    }
+    
+    const updatedTransaction = { 
+      ...transaction, 
+      ...processedUpdateData,
+      notes: processedUpdateData.notes || transaction.notes || null
+    };
+    
     this.transactions.set(id, updatedTransaction);
     return updatedTransaction;
   }

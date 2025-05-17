@@ -6,10 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Format currency
-export function formatCurrency(value: number | string, currency: string = "USD"): string {
+export function formatCurrency(value: number | string, currency: string = "INR"): string {
   const numValue = typeof value === "string" ? parseFloat(value) : value;
   
-  return new Intl.NumberFormat("en-US", {
+  // Use Indian locale and format for INR by default
+  const locale = currency === "INR" ? "en-IN" : "en-US";
+  
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency,
   }).format(numValue);
