@@ -54,7 +54,9 @@ export default function BudgetForm({ onSuccess, defaultValues, budgetId }: Budge
       // Use the data directly to fix date format issues
       const formattedValues = {
         ...values,
-        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId
+        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId,
+        startDate: values.startDate instanceof Date ? values.startDate.toISOString() : new Date(values.startDate).toISOString(),
+        endDate: values.endDate instanceof Date ? values.endDate.toISOString() : new Date(values.endDate).toISOString()
       };
       const res = await apiRequest('POST', '/api/budgets', formattedValues);
       return res.json();

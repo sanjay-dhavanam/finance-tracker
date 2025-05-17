@@ -52,11 +52,13 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Create transaction mutation
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Use the date string directly - no extra conversion needed
+      // Format data properly for API submission
       const formattedValues = {
         ...values,
         // Ensure categoryId is a number
         categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId,
+        // Convert date to ISO string format
+        date: values.date instanceof Date ? values.date.toISOString() : new Date(values.date).toISOString(),
       };
       const res = await apiRequest('POST', '/api/transactions', formattedValues);
       return res.json();
