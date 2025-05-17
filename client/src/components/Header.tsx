@@ -12,6 +12,9 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [, setLocation] = useLocation();
   
+  // This prevents the controlled/uncontrolled input warning
+  const [inputInitialized, setInputInitialized] = useState(false);
+  
   // Load transactions and budgets for search functionality
   const { data: transactions } = useQuery({
     queryKey: ["/api/transactions"],
@@ -55,8 +58,11 @@ export default function Header() {
                     className="pl-10"
                     placeholder="Search transactions, budgets..." 
                     type="search"
-                    value={searchQuery}
-                    onChange={handleSearch}
+                    value={inputInitialized ? searchQuery : ""}
+                    onChange={(e) => {
+                      if (!inputInitialized) setInputInitialized(true);
+                      handleSearch(e);
+                    }}
                   />
                 </div>
               </div>
@@ -90,6 +96,9 @@ export default function Header() {
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add New Transaction</DialogTitle>
+            <DialogDescription>
+              Create a new transaction to track your income or expenses.
+            </DialogDescription>
           </DialogHeader>
           <TransactionForm onSuccess={() => setTransactionModalOpen(false)} />
         </DialogContent>
