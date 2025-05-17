@@ -52,10 +52,11 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Create transaction mutation
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Convert the form data to the format expected by the server
+      // Use the date string directly - no extra conversion needed
       const formattedValues = {
         ...values,
-        date: new Date(values.date).toISOString().split('T')[0], // Format as YYYY-MM-DD
+        // Ensure categoryId is a number
+        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId,
       };
       const res = await apiRequest('POST', '/api/transactions', formattedValues);
       return res.json();
@@ -91,10 +92,10 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Update transaction mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      // Convert the form data to the format expected by the server
+      // Send the date value directly without transformation
       const formattedValues = {
         ...values,
-        date: new Date(values.date).toISOString().split('T')[0], // Format as YYYY-MM-DD
+        categoryId: typeof values.categoryId === 'string' ? parseInt(values.categoryId) : values.categoryId
       };
       const res = await apiRequest('PUT', `/api/transactions/${transactionId}`, formattedValues);
       return res.json();
@@ -166,7 +167,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
                 <FormControl>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-neutral-500 sm:text-sm">$</span>
+                      <span className="text-neutral-500 sm:text-sm">₹</span>
                     </div>
                     <Input className="pl-7" placeholder="0.00" {...field} />
                   </div>
