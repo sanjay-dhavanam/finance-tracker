@@ -8,14 +8,18 @@ import {
   Tag, 
   LineChart, 
   Settings, 
-  DollarSign 
+  DollarSign,
+  Menu,
+  X
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SidebarProps {
   open: boolean;
+  toggleSidebar: () => void;
 }
 
-export default function Sidebar({ open }: SidebarProps) {
+export default function Sidebar({ open, toggleSidebar }: SidebarProps) {
   const [location] = useLocation();
 
   const sidebarLinks = [
@@ -28,20 +32,26 @@ export default function Sidebar({ open }: SidebarProps) {
   ];
 
   return (
-    <aside 
-      className={cn(
-        "sidebar bg-white w-64 transform transition-transform shadow-md h-auto",
-        open ? "open" : ""
-      )}
-    >
+    <aside className="bg-white shadow-md w-64 h-screen">
       <div className="flex flex-col h-full">
-        <div className="p-4 border-b border-neutral-200">
+        <div className="p-4 border-b border-neutral-200 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <span className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
               <DollarSign className="h-5 w-5 text-white" />
             </span>
             <h1 className="text-lg font-bold text-neutral-800">Finance Manager</h1>
           </div>
+          
+          {/* Mobile hamburger menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="md:hidden text-neutral-500 hover:text-neutral-700"
+          >
+            <X className="h-6 w-6" />
+            <span className="sr-only">Close sidebar</span>
+          </Button>
         </div>
         
         <nav className="flex-1 py-4 overflow-y-auto">

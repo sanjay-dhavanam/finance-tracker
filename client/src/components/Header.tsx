@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Menu, Search, Bell, Plus } from "lucide-react";
+import { Search, Bell, Plus } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import TransactionForm from "@/components/transactions/TransactionForm";
 
-interface HeaderProps {
-  toggleSidebar: () => void;
-}
-
-export default function Header({ toggleSidebar }: HeaderProps) {
+export default function Header() {
   const [transactionModalOpen, setTransactionModalOpen] = useState(false);
 
   return (
@@ -17,17 +13,7 @@ export default function Header({ toggleSidebar }: HeaderProps) {
       <header className="bg-white border-b border-neutral-200 shadow-sm">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleSidebar}
-              className="lg:hidden text-neutral-500 hover:text-neutral-700"
-            >
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Open sidebar</span>
-            </Button>
-            
-            <div className="flex-1 px-4 flex justify-center sm:justify-start">
+            <div className="flex-1 px-2 flex justify-center sm:justify-start">
               <div className="max-w-lg w-full">
                 <div className="relative text-neutral-400 focus-within:text-neutral-600">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
