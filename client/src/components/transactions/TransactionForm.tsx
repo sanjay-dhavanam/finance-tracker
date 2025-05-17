@@ -18,11 +18,11 @@ interface TransactionFormProps {
   transactionId?: number;
 }
 
-// Extend the transaction schema with validation rules
-const formSchema = insertTransactionSchema.extend({
+// Define a simplified schema with proper validation
+const formSchema = z.object({
   description: z.string().min(2, "Description must be at least 2 characters"),
   amount: z.string().refine(val => !isNaN(Number(val)) && Number(val) > 0, "Amount must be a positive number"),
-  date: z.union([z.string(), z.date()]).transform(val => val instanceof Date ? val : new Date(val)),
+  date: z.string(), // Keep as string format YYYY-MM-DD
   categoryId: z.union([z.string(), z.number()]).transform(val => typeof val === "string" ? parseInt(val) : val),
   type: z.enum(["income", "expense"]),
   notes: z.string().optional(),
@@ -42,7 +42,7 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
     defaultValues: defaultValues || {
       description: "",
       amount: "",
-      date: new Date().toISOString().slice(0, 10),
+      date: new Date().toISOString().slice(0, 10), // Format as YYYY-MM-DD
       categoryId: "",
       type: "expense",
       notes: "",
@@ -52,7 +52,12 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Create transaction mutation
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await apiRequest('POST', '/api/transactions', values);
+      // Convert the form data to the format expected by the server
+      const formattedValues = {
+        ...values,
+        date: new Date(values.date).toISOString(),
+      };
+      const res = await apiRequest('POST', '/api/transactions', formattedValues);
       return res.json();
     },
     onSuccess: () => {
@@ -86,7 +91,12 @@ export default function TransactionForm({ onSuccess, defaultValues, transactionI
   // Update transaction mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const res = await apiRequest('PUT', `/api/transactions/${transactionId}`, values);
+      // Convert the form data to the format expected by the server
+      const formattedValues = {
+        ...values,
+        date: new Date(values.date).toISOString(),
+      };
+      const res = await apiRequest('PUT', `/api/transactions/${transactionId}`, formattedValues);
       return res.json();
     },
     onSuccess: () => {
